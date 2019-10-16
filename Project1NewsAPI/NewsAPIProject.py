@@ -16,10 +16,31 @@ def getinfo():
             ofile.write("<p>" + "_____________________________________________________________________________" + "<br>" + "<br>" + "</p>")
             
 '''
-        else:
+w        else:
             ofile = open("NewsAPI.html","a")
             ofile.write("<h7>" + "This author has not written anything yet" + "<h7>")
     '''
+
+def opennew():
+    authorInfo = Tk()
+    OPTIONS = ["Authors Today:"]
+
+
+    for i in range(len(datajson["articles"])):
+        if datajson["articles"][i]["author"] is None:
+            OPTIONS.append("Unknown Author")
+        else:
+            OPTIONS.append(datajson["articles"][i]["author"])
+      
+
+    variable = StringVar(authorInfo)
+    variable.set(OPTIONS[0]) # default value
+
+
+    w = OptionMenu(authorInfo, variable, *OPTIONS)
+    w.config(font=("Times New Roman", 14))
+    w.grid(column = 0, row = 2)
+
 ofile = open("NewsAPI.html","w")
 ofile.write("<h1>" + "Nuntium" + "</h1>")
 ofile.write("<h2>" + "Search Through the Latest News with Nuntium!" + "</h2>")
@@ -28,6 +49,9 @@ ofile.close()
 
 
 window1 = Tk()
+
+myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5")
+datajson = myrequest.json()
 
 x = " "
 
@@ -47,9 +71,17 @@ authorTitle = Label(spaceframe, text = "Search for publication by author")
 authorTitle.configure(font=("Times New Roman", 14))
 authorTitle.grid(column = 0, row = 1)
 
+authorInfo = Button(spaceframe, text = "ⓘ", command = opennew)
+authorInfo.grid(column = 1, row = 1)
+
+myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5")
+datajson = myrequest.json()
+
+#___________________________________________________________________________
+
 authorEnter = Entry(spaceframe)
-authorEnter.configure(font=("Times New Roman", 14))
 authorEnter.grid(column = 0, row = 2)
+
 
 submit1 = Button(spaceframe, text = "Submit", command = getinfo)
 submit1.configure(font=("Times New Roman", 14))
@@ -87,28 +119,7 @@ submit2.grid(column = 0, row = 9)
 
 #__________________________________________________________________________________
 
-myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5")
-datajson = myrequest.json()
 
-OPTIONS = ["Scroll through authors"]
-
-
-
-
-for i in range(len(datajson["articles"])):
-    if datajson["articles"][i]["author"] is None:
-        OPTIONS.append("Unknown Author")
-    else:
-        OPTIONS.append(datajson["articles"][i]["author"])
-  
-
-variable = StringVar(window1)
-variable.set(OPTIONS[0]) # default value
-
-
-w = OptionMenu(window1, variable, *OPTIONS)
-w.config(font=("Times New Roman", 14))
-w.grid(column = 0, row = 10)
 
 #def click():
  #   entered_text = entry.get()
