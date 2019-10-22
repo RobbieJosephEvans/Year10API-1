@@ -1,0 +1,22 @@
+* {
+    text-align: center;
+    color: black;
+}
+
+body {
+    background-color: #DFB992;
+    }
+
+a {
+    color: blue;
+}
+
+h1 {
+    color: #896047;
+}
+
+hr {
+    display: block; height: 1px;
+    border: 0; border-top: 1px solid #000000;
+    margin: 1em 0; padding: 0;
+}
