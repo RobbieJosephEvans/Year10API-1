@@ -1,11 +1,29 @@
 import requests
 from tkinter import *
 from PIL import ImageTk, Image
+#import rhinoscriptsyntax as rs
+import socket
+REMOTE_SERVER = "www.google.com"
+def is_connected(hostname):
+  try:
+    # see if we can resolve the host name -- tells us if there is
+    # a DNS listening
+    host = socket.gethostbyname(hostname)
+    # connect to the host -- tells us if the host is actually
+    # reachable
+    s = socket.create_connection((host, 80), 2)
+    s.close()
+    return True
+  except:
+     pass
+  return False
+
 
 def getinfo():
     #myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5") <-- not needed, just wastes time
-    global datajson
+    global datajson, entry
     entry = variable.get()
+    
     #datajson = myrequest.json() #turns myrequests (which is in binary) into a json file
     ofile = open("NewsAPI.html","a")
     '''
@@ -21,27 +39,40 @@ def getinfo():
         if entry == (datajson["articles"][i]["author"]):
             title = datajson["articles"][i]["title"]
             ofile = open("NewsAPI.html","w")
+            ofile.write("<head>")
+            ofile.write("<link rel = 'stylesheet' type = 'text/css' href = 'NewsAPIProject.css'>")
+            ofile.write("</head>")
             ofile.write("<h1>" + "Nuntium" + "</h1>")
             ofile.write("<h2>" + "Search Through the Latest News with Nuntium!" + "</h2>")
-            ofile.write("<p>" + "_____________________________________________________________________________" + "</p>")
+            #ofile.write("<hr>")
+            #ofile.write("<p>" + "_____________________________________________________________________________" + "</p>")
+            ofile.write("<hr>")
             ofile.write("<h4>" + "<u>" + datajson["articles"][i]["author"] + "</u>" + "</h4>")
             ofile.write("<p>" + "Publications by this author:" + "</p>")
             print(datajson["articles"][i]["url"])
-            ofile.write("<h5>" + datajson["articles"][i]["title"] + "<h5>")
-            ofile.write("<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>")
-            ofile.write("<p>" + "_____________________________________________________________________________" + "<br>" + "<br>" + "</p>")
-        elif entry == "Unknown Author: " + datajson["articles"][i]["title"]:
+            ofile.write("<h4>" + datajson["articles"][i]["title"] + "<h4>")
+            ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
+            ofile.write("<hr>")
+            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<br><br>")
+        elif entry == "Unknown Author: " + datajson["articles"][i]["title"][0:25] + "...":
             ofile = open("NewsAPI.html","w")
+            ofile.write("<head>")
+            ofile.write("<link rel = 'stylesheet' type = 'text/css' href = 'NewsAPIProject.css'>")
+            ofile.write("</head>")
             ofile.write("<h1>" + "Nuntium" + "</h1>")
             ofile.write("<h2>" + "Search Through the Latest News with Nuntium!" + "</h2>")
-            ofile.write("<p>" + "_____________________________________________________________________________" + "</p>")
+            #ofile.write("<p>" + "_____________________________________________________________________________" + "</p>")
+            ofile.write("<hr>")
           #  ofile.close()
             ofile.write("<h4>" + "<u>" + "Unknown Author" + "</u>" + "</h4>")
             ofile.write("<p>" + "Publications by this author:" + "</p>")
-            ofile.write("<h5>" + datajson["articles"][i]["title"] + "<h5>")
+            ofile.write("<h4>" + datajson["articles"][i]["title"] + "</h4>")
             print("worked")
-            ofile.write("<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to page</a>")
-            ofile.write("<p>" + "_____________________________________________________________________________" + "<br>" + "<br>" + "</p>")
+            ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to page</a>" + "</h4>")
+            ofile.write("<hr>")
+            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<br><br>")
 
 '''
         listauthor = ["1","2","3","4","5"]
@@ -61,7 +92,46 @@ def getinfo():
     '''
 
 #def goback():
-    
+
+
+
+def getinfo1():
+    entry = variable1.get()
+    for i in range(len(datajson["articles"])): #loops through al articles in JSON
+        if entry == (datajson["articles"][i]["title"]) and (datajson["articles"][i]["author"]) != None:
+            title = datajson["articles"][i]["title"]
+            ofile = open("NewsAPI.html","w")
+            ofile.write("<head>")
+            ofile.write("<link rel = 'stylesheet' type = 'text/css' href = 'NewsAPIProject.css'>")
+            ofile.write("</head>")
+            ofile.write("<h1>" + "Nuntium" + "</h1>")
+            ofile.write("<h2>" + "Search Through the Latest News with Nuntium!" + "</h2>")
+            ofile.write("<hr>")
+            ofile.write("<h4>" + "<u>" + datajson["articles"][i]["author"] + "</u>" + "</h4>")
+            ofile.write("<p>" + "Publications by this author:" + "</p>")
+            print(datajson["articles"][i]["url"])
+            ofile.write("<h4>" + datajson["articles"][i]["title"] + "</h4>")
+            ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
+            ofile.write("<hr>")
+            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<br>" + "<br>")
+        elif entry == (datajson["articles"][i]["title"]) and (datajson["articles"][i]["author"]) == None:
+            title = datajson["articles"][i]["title"]
+            ofile = open("NewsAPI.html","w")
+            ofile.write("<head>")
+            ofile.write("<link rel = 'stylesheet' type = 'text/css' href = 'NewsAPIProject.css'>")
+            ofile.write("</head>")
+            ofile.write("<h1>" + "Nuntium" + "</h1>")
+            ofile.write("<h2>" + "Search Through the Latest News with Nuntium!" + "</h2>")
+            ofile.write("<hr>")
+            ofile.write("<h4>" + "<u>" + "Unknown Author" + "</u>" + "</h4>")
+            ofile.write("<p>" + "Publications by this author:" + "</p>")
+            print(datajson["articles"][i]["url"])
+            ofile.write("<h4>" + datajson["articles"][i]["title"] + "</h4>")
+            ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
+            ofile.write("<hr>")
+            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<br>" + "<br>")
 
 def opennew():
     window2 = Tk()
@@ -90,10 +160,12 @@ def opennew():
 def getauthor(*args):
     print(variable.get())
 
-   
+def getauthor1(*args):
+    print("done")
 
 
 window1 = Tk()
+#window1.configure(background='#DFB992')
 
 myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5")
 datajson = myrequest.json()
@@ -101,8 +173,10 @@ datajson = myrequest.json()
 x = " "
 
 spaceframe = Frame(window1,height=10)
+#spaceframe.configure(background='#DFB992')
 spaceframe.grid(column = 0, row = 4)
 frame = Frame(window1,borderwidth = 1.5, relief=RAISED, width=400,height=150)
+#frame.configure(background='#DFB992')
 frame.grid(column = 0, row = 4)
 spaceframe = Frame(window1,height=10)
 spaceframe.grid(column = 0, row = 4)
@@ -156,7 +230,7 @@ w.config(font=("Times New Roman", 14))
 w.grid(column = 0, row = 2)
 
 
-submit1 = Button(spaceframe, text = "Submit", command = getinfo)
+submit1 = Button(spaceframe, text = "Search", command = getinfo)
 submit1.place(anchor=CENTER)
 submit1.configure(font=("Times New Roman", 14))
 submit1.grid(column = 0, row = 3)
@@ -176,15 +250,45 @@ frame.grid(column = 0, row = 6)
 spaceframe = Frame(window1,height=10)
 spaceframe.grid(column = 0, row = 6)
 
-keywordTitle = Label(spaceframe, text = "Search for publication by keyword")
+keywordTitle = Label(spaceframe, text = "Search for publication by title")
 keywordTitle.configure(font=("Times New Roman", 14))
 keywordTitle.grid(column = 0, row = 7)
-
+'''
 keywordDrop = Entry(spaceframe)
 keywordDrop.configure(font=("Times New Roman", 14))
 keywordDrop.grid(column = 0, row = 8)
+'''
 
-submit2 = Button(spaceframe, text = "Submit", command = getinfo)
+#____________________________________________________________________________________
+OPTIONS1 = ["Titles Today:"]
+
+
+for i in range(len(datajson["articles"])):
+        OPTIONS1.append(datajson["articles"][i]["title"])
+
+'''
+        nullauthor = numberofnulls+1
+        for s in range(nullauthor):
+            global c
+            c = str(s+1)
+            global unknownAuthor1
+            unknownAuthor1 = ("Unknown Author " + c)
+            OPTIONS.append("Unknown Author " + c)
+'''
+
+  
+
+variable1 = StringVar(authorInfo)
+variable1.set(OPTIONS1[0]) # default value
+
+
+s = OptionMenu(spaceframe, variable1, *OPTIONS1, command = getauthor)
+s.config(font=("Times New Roman", 14))
+s.grid(column = 0, row = 8)
+
+#________________________________________________________________________________________________________
+
+submit2 = Button(spaceframe, text = "Search", command = getinfo1)
 submit2.configure(font=("Times New Roman", 14))
 submit2.grid(column = 0, row = 9)
 
@@ -200,5 +304,12 @@ newsImage1 = ImageTk.PhotoImage(Image.open("newsImage1.png"))
 newsImage = Label(window1, image = newsImage1)
 newsImage.grid(column = 0, row = 7)
 
+
+#color1 = rs.CreateColor(223,185,146)
+'''
+myWidgets = [spaceframe, frame, submit2,frame1,submit1,s,w,newline,variable,authorInfo,authorTitle,pageTitle] # List of widgets to change colour
+for wid in myWidgets:
+    wid.configure(bg=(223,185,146))
+'''
 
 window1.mainloop()
