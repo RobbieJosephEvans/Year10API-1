@@ -3,6 +3,22 @@ from tkinter import *
 from PIL import ImageTk, Image
 #import rhinoscriptsyntax as rs
 import socket
+from sys import *
+import os
+
+try:
+    requests.get("https://www.google.com/")
+except:
+    print("Connection failure. Check Wi-Fi status")
+    sys.exit()
+
+try:
+    requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5")
+except:
+    print("API Not Found")
+    sys.exit()
+
+'''
 REMOTE_SERVER = "www.google.com"
 def is_connected(hostname):
   try:
@@ -18,6 +34,14 @@ def is_connected(hostname):
      pass
   return False
 
+
+def internet_on():
+    try:
+        urllib2.urlopen('http://216.58.192.142', timeout=1)
+        return True
+    except urllib2.URLError as err: 
+        return False
+'''
 
 def getinfo():
     #myrequest = requests.get("https://newsapi.org/v2/everything?domains=wsj.com&apiKey=6b01c9faa902470ea4b65e0aa70768d5") <-- not needed, just wastes time
@@ -53,7 +77,25 @@ def getinfo():
             ofile.write("<h4>" + datajson["articles"][i]["title"] + "<h4>")
             ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
             ofile.write("<hr>")
-            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            #statfile = os.stat(datajson["articles"][i]["urlToImage"])
+            #filesize = statfile.st_size
+            ofile.write("<img src='" + datajson["articles"][i]["urlToImage"] + "'>")
+            try:
+                os.stat(datajson["articles"][i]["urlToImage"])
+            except:
+                ofile.write("<img src='" + "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg" + "'>")
+    
+            '''try:
+                im = Image.load(datajson["articles"][i]["urlToImage"])
+                im.verify() #I perform also verify, don't know if he sees other types o defects
+                im.close() #reload is necessary in my case
+                #im = Image.load(["articles"][i]["urlToImage"]) 
+                #im.transpose(PIL.Image.FLIP_LEFT_RIGHT)
+                #im.close()
+            except:
+                ofile.write("<img src='" + "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg" + "'>")'''
+            #ofile.write("<img src='" + datajson["articles"][i]["urlToImage"] + "'>")
+            #ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
             ofile.write("<br><br>")
         elif entry == "Unknown Author: " + datajson["articles"][i]["title"][0:25] + "...":
             ofile = open("NewsAPI.html","w")
@@ -71,7 +113,11 @@ def getinfo():
             print("worked")
             ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to page</a>" + "</h4>")
             ofile.write("<hr>")
-            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<img src='" + datajson["articles"][i]["urlToImage"] + "'>")
+            try:
+                os.stat(datajson["articles"][i]["urlToImage"])
+            except:
+                ofile.write("<img src='" + "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg" + "'>")
             ofile.write("<br><br>")
 
 '''
@@ -97,7 +143,7 @@ def getinfo():
 
 def getinfo1():
     entry = variable1.get()
-    for i in range(len(datajson["articles"])): #loops through al articles in JSON
+    for i in range(len(datajson["articles"])): #loops through all articles in JSON
         if entry == (datajson["articles"][i]["title"]) and (datajson["articles"][i]["author"]) != None:
             title = datajson["articles"][i]["title"]
             ofile = open("NewsAPI.html","w")
@@ -113,7 +159,11 @@ def getinfo1():
             ofile.write("<h4>" + datajson["articles"][i]["title"] + "</h4>")
             ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
             ofile.write("<hr>")
-            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
+            ofile.write("<img src='" + datajson["articles"][i]["urlToImage"] + "'>")
+            try:
+                os.stat(datajson["articles"][i]["urlToImage"])
+            except:
+                ofile.write("<img src='" + "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg" + "'>")
             ofile.write("<br>" + "<br>")
         elif entry == (datajson["articles"][i]["title"]) and (datajson["articles"][i]["author"]) == None:
             title = datajson["articles"][i]["title"]
@@ -130,8 +180,12 @@ def getinfo1():
             ofile.write("<h4>" + datajson["articles"][i]["title"] + "</h4>")
             ofile.write("<h4>" + "<a href='" + datajson["articles"][i]["url"] + "' target='_blank'>Link to site</a>" + "</h4>")
             ofile.write("<hr>")
-            ofile.write("<img src='" + datajson['articles'][i]['urlToImage'] + "'>")
-            ofile.write("<br>" + "<br>")
+            ofile.write("<img src='" + datajson["articles"][i]["urlToImage"] + "'>")
+            try:
+                os.stat(datajson["articles"][i]["urlToImage"])
+            except:
+                ofile.write("<img src='" + "http://www.wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg" + "'>")
+                ofile.write("<br>" + "<br>")
 
 def opennew():
     window2 = Tk()
